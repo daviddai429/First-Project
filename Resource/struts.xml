@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<!-- 开启自动加载核心配置文件功能 -->
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<!-- 简单样式 -->
+	<constant name="struts.ui.theme" value="simple" />
+	<!-- 修改Struts2的最大上传文件大小限制 -->
+	<constant name="struts.multipart.maxSize" value="20971520"></constant>
+
+	<package name="default" namespace="/" extends="struts-default">
+		<!-- 自定义拦截器栈 -->
+		<interceptors>
+			<interceptor name="loginIntercepter"
+				class="com.itheima.spring.intercepter.LoginIntercepter"></interceptor>
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="loginIntercepter">
+					<param name="excludeMethods">login</param>
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack">
+					<param name="fileUpload.allowedExtensions">.jpg,.jpeg,.doc,.docx,.itheima,.png</param>
+					<param name="fileUpload.maximumSize">1024*1024*1</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="myStack"></default-interceptor-ref>
+		
+		<global-results>
+			<result name="login" type="redirect">/login.jsp</result>
+		</global-results>
+		
+		<action name="user_*" class="userAction" method="{1}">
+			<result name="success" type="redirect">/index.jsp</result>
+			<result name="updatejsp">/updatePassword.jsp</result>
+		</action>
+		<action name="customer_*" class="customerAction" method="{1}">
+			<result name="addjsp">/jsp/customer/add.jsp</result>
+			<result name="listjsp">/jsp/customer/list.jsp</result>
+			<result name="listaction" type="redirectAction">customer_findAll</result>
+
+			<result name="input">/jsp/customer/add.jsp</result>
+			<result name="updateInput">/jsp/customer/edit.jsp</result>
+			<result name="editjsp">/jsp/customer/edit.jsp</result>
+		</action>
+		<action name="baseDict_*" class="baseDictAction" method="{1}">
+		</action>
+		<action name="linkMan_*" class="linkManAction" method="{1}">
+			<result name="listjsp" >/jsp/linkman/list.jsp</result>
+			<result name="addjsp">/jsp/linkman/add.jsp</result>
+			<result name="editjsp">/jsp/linkman/edit.jsp</result>
+			<result name="updatejsp" type="redirectAction">linkMan_showLinkMan</result>
+		</action>
+		
+		<action name="saleVisit_*" class="saleVisitAction" method="{1}">
+			<result name="listjsp">/jsp/salevisit/list.jsp</result>
+			<result name="showjsp">/jsp/salevisit/add.jsp</result>
+			<result name="listaction" type="redirectAction">saleVisit_findAll</result>
+		</action>
+
+	</package>
+
+
+</struts>
